@@ -1,4 +1,5 @@
 ---
+name: commit
 description: Create a clean, atomic git commit from the current changes. Use whenever the user says "commit", "commit this", or invokes /commit.
 allowed-tools:
   - Bash(git init)

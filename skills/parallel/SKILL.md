@@ -1,4 +1,5 @@
 ---
+name: parallel
 description: Orchestrate parallel Claude Code sessions in separate git worktrees. Use when the user says "parallel", "spin up tasks", "run these in parallel", or invokes /parallel.
 allowed-tools:
   - Bash(~/.claude/skills/parallel/scripts/launch.sh *)
