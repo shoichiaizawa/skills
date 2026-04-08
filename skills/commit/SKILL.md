@@ -9,11 +9,11 @@ allowed-tools:
   - Bash(git log *)
   - Bash(git branch --show-current)
   - Bash(git commit *)
-  - Bash(bash *pre-flight*)
-  - Bash(bash *analyse-changes*)
-  - Bash(bash *effort-level*)
-  - Bash(bash *validate-message*)
-  - Bash(cat *validate-message*)
+  - Bash(bash *pre-flight.sh*)
+  - Bash(bash *analyse-changes.sh*)
+  - Bash(bash *effort-level.sh*)
+  - Bash(bash *validate-message.sh*)
+  - Bash(cat *validate-message.sh*)
 ---
 
 # /commit
