@@ -170,5 +170,5 @@ echo "${#merged[@]} merged, ${#failed[@]} failed"
 if [[ ${#failed[@]} -gt 0 ]]; then
   echo "failed: ${failed[*]}"
   echo "resolve conflicts manually, then clean up with:"
-  echo "  ~/.claude/skills/parallel/scripts/cleanup.sh ${failed[*]}"
+  echo "  bash \"\$(dirname \"\$0\")/cleanup.sh\" ${failed[*]}"
 fi

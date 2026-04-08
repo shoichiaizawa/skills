@@ -141,7 +141,7 @@ done
 echo ""
 echo "# ── cleanup ──"
 echo ""
-echo "~/.claude/skills/parallel/scripts/cleanup.sh ${names[*]}"
+echo "bash \"\$(dirname \"\$0\")/cleanup.sh\" ${names[*]}"
 echo ""
 
 # --- Deduplicate panes ----------------------------------------------------

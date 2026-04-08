@@ -2,11 +2,11 @@
 name: parallel
 description: Orchestrate parallel Claude Code sessions in separate git worktrees. Use when the user says "parallel", "spin up tasks", "run these in parallel", or invokes /parallel.
 allowed-tools:
-  - Bash(~/.claude/skills/parallel/scripts/launch.sh *)
-  - Bash(~/.claude/skills/parallel/scripts/cleanup.sh *)
-  - Bash(~/.claude/skills/parallel/scripts/status.sh *)
-  - Bash(~/.claude/skills/parallel/scripts/merge.sh *)
-  - Bash(mkdir -p ~/.claude/parallel/sessions/*)
+  - Bash(bash *launch.sh *)
+  - Bash(bash *cleanup.sh *)
+  - Bash(bash *status.sh *)
+  - Bash(bash *merge.sh *)
+  - Bash(mkdir -p *)
 ---
 
 # /parallel
@@ -46,7 +46,7 @@ alternative. Proceed with the script if they still want `/parallel`.
 Create a session directory and write one prompt file per task:
 
 ```bash
-prompts_dir="$HOME/.claude/parallel/sessions/$(date +%Y-%m-%dT%H-%M-%S)"
+prompts_dir="${CLAUDE_CONFIG_DIR:-$HOME/.claude}/parallel/sessions/$(date +%Y-%m-%dT%H-%M-%S)"
 mkdir -p "$prompts_dir"
 ```
 
@@ -69,7 +69,7 @@ agent won't have the original conversation context.
 Pass all task slugs and the prompts directory to the launch script:
 
 ```bash
-~/.claude/skills/parallel/scripts/launch.sh --prompts-dir "$prompts_dir" <slug-1> <slug-2> [...]
+bash ${CLAUDE_SKILL_DIR}/scripts/launch.sh --prompts-dir "$prompts_dir" <slug-1> <slug-2> [...]
 ```
 
 The script handles everything: creates worktrees as sibling directories, launches
@@ -81,14 +81,14 @@ in tmux), and outputs the merge plan.
 Check agent progress with the status script:
 
 ```bash
-~/.claude/skills/parallel/scripts/status.sh
+bash ${CLAUDE_SKILL_DIR}/scripts/status.sh
 ```
 
 It auto-discovers all `task/*` branches, checks for commits since base, and
 detects open tmux panes. Pass task names to check a subset:
 
 ```bash
-~/.claude/skills/parallel/scripts/status.sh <slug-1> <slug-2>
+bash ${CLAUDE_SKILL_DIR}/scripts/status.sh <slug-1> <slug-2>
 ```
 
 ### Step 5 — Merge
@@ -97,13 +97,13 @@ Once agents are done, merge their branches back. The merge script handles
 worktree removal, stashing, rebasing/merging, and branch cleanup in one go:
 
 ```bash
-~/.claude/skills/parallel/scripts/merge.sh <slug-1> <slug-2> [...]
+bash ${CLAUDE_SKILL_DIR}/scripts/merge.sh <slug-1> <slug-2> [...]
 ```
 
 Default strategy is rebase (linear history). For merge commits:
 
 ```bash
-~/.claude/skills/parallel/scripts/merge.sh --strategy merge <slug-1> <slug-2>
+bash ${CLAUDE_SKILL_DIR}/scripts/merge.sh --strategy merge <slug-1> <slug-2>
 ```
 
 If a branch conflicts, the script aborts that branch cleanly and continues with
@@ -112,7 +112,7 @@ the rest. Resolve conflicts manually, then clean up leftovers with `cleanup.sh`.
 To keep branches after merging (e.g. for further review):
 
 ```bash
-~/.claude/skills/parallel/scripts/merge.sh --no-cleanup <slug-1> <slug-2>
+bash ${CLAUDE_SKILL_DIR}/scripts/merge.sh --no-cleanup <slug-1> <slug-2>
 ```
 
 ## Notes
@@ -124,5 +124,5 @@ To keep branches after merging (e.g. for further review):
 - `status.sh` detects running agents by checking tmux pane directories — it may not detect agents that have exited but whose pane is still open.
 - `merge.sh` handles worktree removal automatically — no need to remove them manually before merging.
 - To discard all worktrees and branches without merging: `cleanup.sh <slug-1> <slug-2> ...`
-- Prompt files are kept in `~/.claude/parallel/sessions/` for audit trails and re-runs.
+- Prompt files are kept in `$CLAUDE_CONFIG_DIR/parallel/sessions/` (defaults to `~/.claude/parallel/sessions/`) for audit trails and re-runs.
 - Set `PARALLEL_MAX_PANES` to override the default limit of 16 panes per tmux window.
