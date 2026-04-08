@@ -30,7 +30,7 @@ sys.exit(1)
 
 # Project-level takes precedence
 project_settings=".claude/settings.json"
-global_settings="$HOME/.claude/settings.json"
+global_settings="${CLAUDE_CONFIG_DIR:-$HOME/.claude}/settings.json"
 
 effort=$(extract_effort "$project_settings") && { echo "$effort"; exit 0; }
 effort=$(extract_effort "$global_settings") && { echo "$effort"; exit 0; }

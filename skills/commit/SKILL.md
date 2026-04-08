@@ -21,12 +21,12 @@ allowed-tools:
 ## Context
 
 - User hint: $ARGUMENTS
-- Pre-flight: !`bash ~/.claude/skills/commit/scripts/pre-flight.sh`
+- Pre-flight: !`bash ${CLAUDE_SKILL_DIR}/scripts/pre-flight.sh`
 - Current branch: !`git branch --show-current 2>/dev/null || echo "N/A"`
-- Change analysis: !`bash ~/.claude/skills/commit/scripts/analyse-changes.sh 2>/dev/null || echo "N/A"`
+- Change analysis: !`bash ${CLAUDE_SKILL_DIR}/scripts/analyse-changes.sh 2>/dev/null || echo "N/A"`
 - Full diff: !`git diff HEAD 2>/dev/null || echo "N/A"`
 - Recent commits: !`git log --oneline -10 2>/dev/null || echo "N/A"`
-- Effort level: !`bash ~/.claude/skills/commit/scripts/effort-level.sh`
+- Effort level: !`bash ${CLAUDE_SKILL_DIR}/scripts/effort-level.sh`
 
 ## Instructions
 
@@ -68,10 +68,10 @@ starting point for your atomicity assessment.
 3. **If everything is a single logical change**: stage all modified files by name
    (e.g., `git add file1 file2`) and proceed.
 4. **If changes should be split into multiple commits**: explain the split,
-   listing which files/hunks belong to each commit. Stage only the first logical
+   listing which files/hunks belong to each commit. Stage the first logical
    unit (use `git add <file>` or `git add -p <file>` for partial staging) and
-   proceed with that commit. **Stop after committing the first unit** — do not
-   continue to the next. The user will invoke `/commit` again for the rest.
+   proceed with that commit. Then continue to the next unit — repeat steps 1–3
+   for each remaining unit until all changes are committed.
 5. **Never use `git add -A` or `git add .`** — always stage files by name to
    avoid accidentally including untracked files.
 
@@ -94,7 +94,7 @@ style consistency.
 
 1. Validate the draft message before committing:
    ```
-   cat <<'EOF' | bash ~/.claude/skills/commit/scripts/validate-message.sh
+   cat <<'EOF' | bash ${CLAUDE_SKILL_DIR}/scripts/validate-message.sh
    <full draft message here>
    EOF
    ```
