@@ -53,15 +53,35 @@ symlinks back to the canonical copy.
 
 ### Multiple environments
 
-The CLI respects environment variables for agent-specific installation paths:
+If you use multiple Claude accounts — for example, a personal Max Plan and an
+employer-provided Team or Enterprise Plan — you can separate each environment by
+pointing `CLAUDE_CONFIG_DIR` to a different directory per profile.
 
 ```bash
-# Personal
+# Personal (default ~/.claude config directory)
 npx skills add shoichiaizawa/skills -a claude-code -g -y
 
-# Enterprise (separate Claude Code config directory)
-CLAUDE_CONFIG_DIR=~/.claude-enterprise npx skills add shoichiaizawa/skills -a claude-code -g -y
+# Work (separate config directory)
+CLAUDE_CONFIG_DIR=~/.claude-work npx skills add shoichiaizawa/skills -a claude-code -g -y
+
+# Or from within a Claude Code session, prefix with ! to run as a shell command
+# ! npx skills add shoichiaizawa/skills -a claude-code -g -y
 ```
+
+To launch Claude Code under a non-default profile, set the same variable:
+
+```bash
+CLAUDE_CONFIG_DIR=~/.claude-work claude
+```
+
+Shell aliases make this convenient — add them to `~/.bashrc` or `~/.zshrc`:
+
+```bash
+alias claude-work='CLAUDE_CONFIG_DIR=~/.claude-work claude'
+alias claude-side='CLAUDE_CONFIG_DIR=~/.claude-side claude'
+```
+
+Each profile is fully independent.
 
 Other environment variables: `CODEX_HOME` (Codex), `XDG_CONFIG_HOME` (OpenCode,
 Goose, Amp, and others).
